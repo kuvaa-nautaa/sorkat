@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css">
+    <style>
+        p.result {
+            background-color: rgb(250, 250, 250);
+            padding: 10px;
+            border-style: solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h1>Kuvaa nautaa - sorkkalaskuri</h1>
+
+    <form>
+        <fieldset>
+            <label for="outTemp">Ilman lämpötila</label>
+            <input type="text" value="20.0" id="outTemp">
+            <label for="hoofTemp">Sorkan lämpötila</label>
+            <input type="text" value="30.0" id="hoofTemp">
+            <select id="hoof">
+                <option value="taka">Takasorkka</option>
+                <option value="etu">Etusorkka</option>
+            </select>
+        
+        </fieldset>
+        
+    </form>
+    <button onclick="calculate()">Laske</button>
+    <div>
+        <strong>Arvio:</strong>
+        <p id="tulos" class="result"></p>
+    </div>
+<script>
+    function calculate(){
+        outTemp = document.getElementById("outTemp").value.replace(',', ".");
+        hoofTemp = document.getElementById("hoofTemp").value.replace(',', ".");
+        hoof = document.getElementById("hoof").value;
+        
+        outTemp = parseFloat(outTemp);
+        hoofTemp = parseFloat(hoofTemp);
+        
+        hoofInd = 0;
+        if (hoof == "taka"){hoofInd = 1}
+
+        eAir = Math.exp(outTemp*-.07);
+        pTemp = 31.6244 - 16.4176*eAir + hoofInd*1.888;
+
+        diff = hoofTemp - pTemp;
+        rDiff = Math.round((diff + Number.EPSILON) * 100) / 100
+
+        console.log(outTemp);
+        console.log(hoofTemp);
+        console.log(rDiff);
+        tulos = document.getElementById('tulos');
+        tulos.innerHTML = "";
+        if (rDiff < 0.5){
+            tulos.innerHTML = "Sorkka on todennäköisesti terve. Sorkan lämpötila on " +
+            rDiff + ' astetta ennustettua ';
+            if (rDiff < 0){tulos.innerHTML += "alhaisempi"}else{tulos.innerHTML += "korkeampi"}
+            tulos.style.color = "green";
+        } else if ((rDiff >= 0.5) && (rDiff < 2)) {
+            tulos.innerHTML = "Seuraa tilanteen kehittymistä. Sorkan lämpötila on " +
+                rDiff + ' astetta ennustettua korkeampi. Noin puolella tällä lämpötila-alueella olevista lehmistä \
+                todettiin anturahaavauma tai kärkipaise.';
+            tulos.style.color = "orange";
+        } else
+        {
+            tulos.innerHTML = "Suositellaan sorkan tarkastamista. Sorkan lämpötila on " +
+                rDiff + ' astetta ennustettua korkeampi.';
+            tulos.style.color = "red";
+        }
+    }
+</script>    
+</div>
+
+</body>
+</html>
