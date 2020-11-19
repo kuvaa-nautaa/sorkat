@@ -22,7 +22,7 @@
         <fieldset>
             <label for="outTemp">Ilman lämpötila</label>
             <input type="text" value="20.0" id="outTemp">
-            <label for="hoofTemp">Sorkan lämpötila</label>
+            <label for="hoofTemp">Sorkan maksimi lämpötila</label>
             <input type="text" value="30.0" id="hoofTemp">
             <select id="hoof">
                 <option value="taka">Takasorkka</option>
@@ -53,7 +53,7 @@
         if (hoof == "taka"){hoofInd = 1}
 
         eAir = Math.exp(outTemp*-.07);
-        pTemp = 31.6244 - 16.4176*eAir + hoofInd*1.888;
+        pTemp = 32.8286 - 11.4849*eAir + hoofInd*3.205;
 
         diff = hoofTemp - pTemp;
         rDiff = Math.round((diff + Number.EPSILON) * 100) / 100
